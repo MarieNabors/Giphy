@@ -31,7 +31,7 @@
       <input type="text" id="feelings-input"><br>
 
       <!-- Button triggers new movie to be added -->
-      <input id="add-feeling" type="submit" value="How are you feeling?">
+      <input id="add-feeling" type="submit" value="Submit">
     </form>
   </div>
 
@@ -39,15 +39,27 @@
       
 <script>
   //Before you can make any part of our site work, you need to create an array of strings, each one related to a topic that interests you. Save it to a variable called topics.
+  $("#feelings-form").submit(function(e) {
+    e.preventDefault()
+    var newButton = $("<button>");
+    console.log($(this).serialize())
+  var text=  $("#feelings-input").val()
+  newButton.attr("data-feelings",text)
+  newButton.html(text)
+  $("#buttons").append(newButton)
+
+    
+  });
 
   var topics = ["happy", "sad", "excited", "nervous", "mad", "tired", "embarrassed", "surprised", "amazed", "bored", "grieving", "confused", "annoyed", "disgusted", "proud"," motivated", "scared", "stupid", "hurt", "insecure", "lonely", "inspired"]
 
-$("button").on("click", function() {
+
+$(document).on("click", "button", function() {
   console.log("hi");
-      // Grabbing and storing the data-animal property value from the button
+      // Grabbing and storing the data-feelings property value from the button
       var topics = $(this).attr("data-feelings");
 
-      // Constructing a queryURL using the animal name
+      // Constructing a queryURL using the feeling name
       var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
         topics + "&api_key=WtosaYWE8mxeHh1AgUW6KtKF6X761fqY&limit=10";
 
@@ -63,22 +75,24 @@ $("button").on("click", function() {
           console.log("hi");
 
       //    Creating and storing a div tag
-            var animalDiv = $("<div>");
+            var feelingsDiv = $("<div>");
 
             // Creating a paragraph tag with the result item's rating
             var p = $("<p>").text("Rating: " + results[i].rating);
 
             // Creating and storing an image tag
-            var animalImage = $("<img>");
+            var feelingImage = $("<img>");
             // Setting the src attribute of the image to a property pulled off the result item
-            animalImage.attr("src", results[i].images.fixed_height.url);
+            feelingImage.attr("src", results[i].images.fixed_height.url);
+ $("img").on ("click" , function () {
+    $(this).attr("src",results[0].images.fixed_height_still.url)
+  })
+            // Appending the paragraph and image tag to the feelingsDiv
+            feelingsDiv.append(p);
+            feelingsDiv.append(feelingImage);
 
-            // Appending the paragraph and image tag to the animalDiv
-            animalDiv.append(p);
-            animalDiv.append(animalImage);
-
-            // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
-            $("#gifs-appear-here").prepend(animalDiv);
+            // Prependng the feelingsDiv gifs-appear-here div
+            $("#gifs-appear-here").prepend(feelingsDiv);
          }
       });
     });
